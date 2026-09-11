@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX — Progetti</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.cdnfonts.com https://fonts.googleapis.com; font-src https://fonts.cdnfonts.com https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self'">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23000000'/><path d='M 50,18 L 20,82 L 33,82 L 50,44 L 60,66 L 73,66 L 50,18 Z M 64,74 L 70,82 L 83,82 L 64,74 Z' fill='%23ffffff'/></svg>">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+    <link rel="stylesheet" href="../core/core.css">
+    <link rel="stylesheet" href="progetti.css">
+</head>
+<body>
+
+    <svg class="sprite-icone" aria-hidden="true" focusable="false">
+        <defs>
+            <linearGradient id="drive-g1" x1="193.6" x2="103.09" y1="165.6" y2="111.21" gradientUnits="userSpaceOnUse"><stop offset=".09" stop-color="#ffe921"/><stop offset="1" stop-color="#fec700"/></linearGradient>
+            <linearGradient id="drive-g2" x1="114.4" x2="15.53" y1="181.61" y2="121.8" gradientUnits="userSpaceOnUse"><stop offset=".15" stop-color="#a9a8ff"/><stop offset=".33" stop-color="#6d97ff"/><stop offset=".48" stop-color="#3186ff"/></linearGradient>
+            <linearGradient id="drive-g3" x1="128.88" x2="28.7" y1="37.88" y2="84.64" gradientUnits="userSpaceOnUse"><stop offset=".55" stop-color="#0ebc5f"/><stop offset=".85" stop-color="#78c9ff"/></linearGradient>
+            <mask id="drive-m" width="168" height="154" x="12" y="18" maskUnits="userSpaceOnUse" mask-type="alpha">
+                <path fill="#fff" d="M63.09 37c14.626-25.333 51.193-25.334 65.819 0l45.033 78c14.626 25.334-3.657 57.001-32.91 57.001H50.967c-29.253 0-47.536-31.667-32.91-57.001z"/>
+            </mask>
+        </defs>
+
+        <symbol id="logo-drive" viewBox="0 0 192 192">
+            <g mask="url(#drive-m)">
+                <path fill="url(#drive-g1)" d="M206.905 172.02h-91.888l-19.015-32.934 45.944-79.578z"/>
+                <path fill="url(#drive-g2)" d="M-14.919 172.006 50.04 59.494v.002L31.032 92.422h38.02L115 172.004l-129.918.001z"/>
+                <path fill="url(#drive-g3)" d="M96.007-20.085 141.954 59.5l-19.011 32.928H31.048z"/>
+            </g>
+        </symbol>
+
+        <symbol id="logo-odoo" viewBox="0 0 100 32">
+            <g fill="none" stroke-width="6">
+                <circle cx="13" cy="20" r="9" stroke="#9C5A87"/>
+                <circle cx="38" cy="20" r="9" stroke="#8F8F8F"/>
+                <path d="M47 20V8" stroke="#8F8F8F" stroke-linecap="round"/>
+                <circle cx="63" cy="20" r="9" stroke="#8F8F8F"/>
+                <circle cx="88" cy="20" r="9" stroke="#8F8F8F"/>
+            </g>
+        </symbol>
+    </svg>
+
+    <header class="header">
+        <div class="header-toprow">
+            <div class="brand-container">
+                <a class="brand-name" href="../" title="Torna al portale">APEX</a>
+            </div>
+
+            <div class="header-nav">
+                <div class="user-profile-wrapper">
+                    <div class="avatar-btn" id="utenteAvatar" data-action="profilo" title="Profilo utente">
+                        <span id="utenteIniziali">--</span>
+                    </div>
+
+                    <div class="profile-dropdown" id="menuProfilo" hidden>
+                        <div class="profile-user-card">
+                            <div class="avatar-btn avatar-large" id="utenteAvatarGrande">
+                                <span id="utenteInizialiGrandi">--</span>
+                            </div>
+                            <div class="profile-user-details">
+                                <div class="profile-name" id="utenteNome"></div>
+                                <div class="profile-email" id="utenteEmail"></div>
+                                <div class="profile-role-badge" id="utenteBadge" hidden></div>
+                            </div>
+                        </div>
+
+                        <div class="profile-menu-item" data-action="tema">
+                            <span class="material-symbols-outlined" id="iconaTema">dark_mode</span>
+                            <span id="testoTema">Modalità Scura</span>
+                        </div>
+
+                        <div class="profile-menu-item danger" data-action="logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Disconnetti Account</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <div class="app-body">
+
+        <div class="header-actions-row">
+            <div class="header-actions">
+                <button type="button" class="btn btn-export" data-action="nuovo-progetto" id="btnNuovo" hidden
+                        title="Aggiungi un progetto: serve solo il codice">
+                    <span class="material-symbols-outlined">add_box</span> Nuovo Progetto
+                </button>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-chip">
+                    <span class="stat-chip-label">Progetti</span>
+                    <span class="stat-chip-value" id="statTotale">0</span>
+                </div>
+                <div class="stat-chip">
+                    <span class="stat-chip-label">In Corso</span>
+                    <span class="stat-chip-value" id="statInCorso">0</span>
+                </div>
+                <div class="stat-chip">
+                    <span class="stat-chip-label">In Ritardo</span>
+                    <span class="stat-chip-value" id="statInRitardo">0</span>
+                </div>
+                <div class="stat-chip stat-chip-progress">
+                    <span class="stat-chip-label">Documentazione</span>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="statDocBar"></div>
+                        </div>
+                        <span class="progress-text" id="statDocText">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-actions risorse">
+            <button type="button" class="btn btn-theme" data-action="risorse" id="btnRisorse"
+                    aria-expanded="true" aria-controls="collegamenti" title="Mostra o nascondi i collegamenti">
+                <span class="material-symbols-outlined">folder_open</span> Risorse
+                <span class="material-symbols-outlined" id="frecciaRisorse">expand_less</span>
+            </button>
+            <nav class="barra-collegamenti" id="collegamenti"></nav>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="ricerca">Ricerca Libera</label>
+                <input type="search" id="ricerca" class="standard-select campo-ricerca"
+                       placeholder="Codice, cliente, città, descrizione…" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="filter-group">
+                <label for="filtroStatus">Status Progetto</label>
+                <select id="filtroStatus" class="standard-select"></select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroFase">Fase Progetto</label>
+                <select id="filtroFase" class="standard-select"></select>
+            </div>
+            <div class="filter-group">
+                <label for="btnFiltroPm">Project Manager</label>
+                <div class="tendina-persone">
+                    <input type="hidden" id="filtroPm" value="">
+                    <button type="button" class="standard-select tendina-scelta" id="btnFiltroPm"
+                            data-action="apri-filtro-pm" aria-haspopup="listbox" aria-expanded="false"></button>
+                    <div class="elenco-responsabili" id="elencoFiltroPm" role="listbox" hidden></div>
+                </div>
+            </div>
+            <div class="filter-group filter-group-fine">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-theme" data-action="azzera-filtri" title="Resetta tutti i filtri">
+                    <span class="material-symbols-outlined">restart_alt</span> Resetta Filtri
+                </button>
+            </div>
+        </div>
+
+        <div class="progetti-avviso" id="avviso" hidden></div>
+
+        <main>
+            <div class="tabella-contenitore">
+                <table class="tabella-dati tabella-progetti">
+                    <thead id="intestazione"></thead>
+                    <tbody id="corpo"></tbody>
+                </table>
+            </div>
+        </main>
+
+    </div>
+
+    <dialog class="apex-dialog dialogo-scheda" id="dialogoScheda">
+        <div class="scheda-testata">
+            <div>
+                <h3 id="schedaCodice"></h3>
+                <p id="schedaCliente"></p>
+            </div>
+            <div class="scheda-azioni">
+                <button type="button" class="btn btn-neutro" id="btnCancellato"
+                        data-action="segna-cancellato" hidden></button>
+                <button type="button" class="btn btn-neutro" data-action="chiudi-scheda">Chiudi</button>
+            </div>
+        </div>
+        <div class="scheda-errore dlg-errore" id="schedaErrore" hidden></div>
+        <div id="schedaCorpo"></div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoCampo">
+        <h3 id="campoTitolo"></h3>
+        <p id="campoSottotitolo"></p>
+        <div class="dlg-errore" id="campoErrore" hidden></div>
+        <div id="campoEditor"></div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-neutro" data-action="chiudi-campo">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-campo">Salva</button>
+        </div>
+    </dialog>
+
+
+    <dialog class="apex-dialog dialogo-risorse" id="dialogoRisorse">
+        <h3>I pulsanti delle Risorse</h3>
+        <p>Ogni riga e' un pulsante della barra. I campi si salvano uscendo dal campo.
+           L'occhio lo toglie dalla barra senza cancellarlo; il cestino lo cancella.</p>
+        <div class="dlg-errore" id="risorseErrore" hidden></div>
+        <div class="elenco-risorse" id="elencoRisorse"></div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="nuova-risorsa">
+                <span class="material-symbols-outlined">add</span> Aggiungi
+            </button>
+            <button type="button" class="btn btn-primario" data-action="chiudi-risorse">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoNuovo">
+        <h3>Nuovo progetto</h3>
+        <p>Serve solo il codice. Tutto il resto si compila dopo, dalla tabella o dalla scheda.</p>
+        <div class="dlg-errore" id="nuovoErrore" hidden></div>
+        <label class="campo-label" for="nuovoCodice">Codice progetto</label>
+        <input type="text" id="nuovoCodice" placeholder="2026vd001" autocomplete="off" spellcheck="false">
+        <label class="campo-label" for="nuovoBu">Business unit</label>
+        <select id="nuovoBu"></select>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-neutro" data-action="chiudi-nuovo">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="crea-progetto">Crea</button>
+        </div>
+    </dialog>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

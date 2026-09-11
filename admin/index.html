@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX — Admin</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.cdnfonts.com https://fonts.googleapis.com; font-src https://fonts.cdnfonts.com https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self'">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23000000'/><path d='M 50,18 L 20,82 L 33,82 L 50,44 L 60,66 L 73,66 L 50,18 Z M 64,74 L 70,82 L 83,82 L 64,74 Z' fill='%23ffffff'/></svg>">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+    <link rel="stylesheet" href="../core/core.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-toprow">
+            <div class="brand-container">
+                <a class="brand-name" href="../" title="Torna al portale">APEX</a>
+            </div>
+
+            <div class="header-nav">
+                <div class="user-profile-wrapper">
+                    <div class="avatar-btn" id="utenteAvatar" data-action="profilo" title="Profilo utente">
+                        <span id="utenteIniziali">--</span>
+                    </div>
+
+                    <div class="profile-dropdown" id="menuProfilo" hidden>
+                        <div class="profile-user-card">
+                            <div class="avatar-btn avatar-large" id="utenteAvatarGrande">
+                                <span id="utenteInizialiGrandi">--</span>
+                            </div>
+                            <div class="profile-user-details">
+                                <div class="profile-name" id="utenteNome"></div>
+                                <div class="profile-email" id="utenteEmail"></div>
+                                <div class="profile-role-badge" id="utenteBadge" hidden></div>
+                            </div>
+                        </div>
+
+                        <div class="profile-menu-item" data-action="tema">
+                            <span class="material-symbols-outlined" id="iconaTema">dark_mode</span>
+                            <span id="testoTema">Modalità Scura</span>
+                        </div>
+
+                        <div class="profile-menu-item danger" data-action="logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Disconnetti Account</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-corpo">
+        <div class="admin-testata">
+            <div>
+                <h1>Persone e abilitazioni</h1>
+                <p class="sottotitolo" id="riepilogo">Caricamento…</p>
+            </div>
+            <button type="button" class="btn btn-primario" data-action="nuove-persone" id="btnNuovePersone" hidden>
+                <span class="material-symbols-outlined">person_add</span>
+                <span>Nuove persone</span>
+            </button>
+        </div>
+
+        <div class="admin-avviso" id="avviso" hidden></div>
+
+        <div class="tabella-contenitore">
+            <table class="tabella-dati tabella-persone">
+                <thead id="intestazione"></thead>
+                <tbody id="corpo"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <dialog class="apex-dialog dialogo-permesso" id="dialogoPermesso">
+        <h3 id="dlgTitolo"></h3>
+        <p id="dlgSottotitolo"></p>
+
+        <div class="dlg-errore" id="dlgErrore" hidden></div>
+
+        <div id="dlgRuoli"></div>
+        <div id="dlgAmbito"></div>
+
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-neutro" data-action="chiudi-permesso">Annulla</button>
+            <button type="button" class="btn btn-pericolo" data-action="revoca-permesso" id="dlgRevoca">Rimuovi accesso</button>
+            <button type="button" class="btn btn-primario" data-action="salva-permesso" id="dlgSalva">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-account" id="dialogoNuove">
+        <h3>Nuove persone</h3>
+        <p>Un indirizzo per riga. Vengono creati gli account; l'accesso ai moduli si dà dopo, dalla tabella.</p>
+
+        <div class="dlg-errore" id="nuoveErrore" hidden></div>
+
+        <textarea id="nuoveEmail" rows="7" spellcheck="false"
+            placeholder="nome.cognome@tt-group.it&#10;altro.nome@tt-group.it"></textarea>
+
+        <div id="nuoveEsiti"></div>
+
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-neutro" data-action="chiudi-nuove">Chiudi</button>
+            <button type="button" class="btn btn-primario" data-action="crea-account" id="nuoveCrea">Crea</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-account" id="dialogoStato">
+        <h3 id="statoTitolo"></h3>
+        <p id="statoTesto"></p>
+
+        <div class="dlg-errore" id="statoErrore" hidden></div>
+
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-neutro" data-action="chiudi-stato">Annulla</button>
+            <button type="button" class="btn btn-pericolo" data-action="disattiva" id="statoDisattiva">Disattiva</button>
+            <button type="button" class="btn btn-primario" data-action="riattiva" id="statoRiattiva">Riattiva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-account" id="dialogoNome">
+        <h3>Nome della persona</h3>
+        <p id="nomeTitolo"></p>
+
+        <div class="dlg-errore" id="nomeErrore" hidden></div>
+
+        <input type="text" id="nomeValore" maxlength="120" spellcheck="false" autocomplete="off">
+        <p class="nota-campo" id="nomeAutomatico"></p>
+        <p class="nota-campo" id="nomeFonte"></p>
+
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-neutro" data-action="chiudi-nome">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-nome">Salva</button>
+        </div>
+    </dialog>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
