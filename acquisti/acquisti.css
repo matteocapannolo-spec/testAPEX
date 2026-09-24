@@ -1,0 +1,137 @@
+
+html, body { height: 100vh; margin: 0; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+.header-actions .btn-theme { padding-top: 5px; padding-bottom: 5px; }
+
+.campo-ricerca { min-width: 260px; }
+
+.campo-label { display: block; margin: 12px 0 4px; font-size: 0.82rem; color: var(--text-muted); }
+
+.acquisti-avviso {
+    padding: 10px 14px; margin-bottom: 14px;
+    border-left: 3px solid var(--color-error); background: var(--surface-color);
+    font-size: 0.9rem;
+}
+
+.dlg-errore {
+    padding: 8px 12px; margin: 10px 0;
+    border-left: 3px solid var(--color-error); background: var(--surface-color);
+    font-size: 0.88rem;
+}
+
+
+.tabella-contenitore { flex: 1; overflow: auto; border: 1px solid var(--border-color); }
+
+.tabella-dati .cell-content { text-align: center; }
+
+.tabella-acquisti .col-testo .cell-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tabella-acquisti td[data-col="nome"] .cell-content { font-weight: 600; }
+
+.tabella-acquisti .nota {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.75rem;
+    line-height: 1.15;
+}
+
+.tabella-acquisti td.col-contatto .cell-content { padding: 4px 10px; }
+
+.contatto {
+    display: inline-flex;
+    vertical-align: top;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+    text-align: left;
+    font-size: 0.7rem;
+    line-height: 1.2;
+}
+
+.contatto-riga { display: flex; align-items: center; gap: 4px; max-width: 100%; }
+.contatto-riga .material-symbols-outlined { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+.contatto-testo { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contatto-nome { font-weight: 600; }
+
+.tabella-vuota { margin: 18px 16px; font-size: 0.9rem; color: var(--text-muted); }
+.elenco-vuoto { margin: 8px 0 0 0; font-size: 0.82rem; color: var(--text-muted); }
+
+.tabella-acquisti .btn-link-pill { gap: 5px; font-size: 0.8rem; max-width: 100%; box-sizing: border-box; }
+.tabella-acquisti .btn-link-pill .material-symbols-outlined { font-size: 15px; flex-shrink: 0; }
+.link-dominio { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.pill { padding: 3px 8px; font-size: 0.6rem; }
+
+.pillole { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+
+.cat-0 { background: rgba(61, 96, 152, 0.15);  color: var(--color-blu); }
+.cat-1 { background: rgba(0, 161, 112, 0.15);  color: var(--color-verde); }
+.cat-2 { background: rgba(194, 90, 16, 0.15);  color: var(--color-arancio); }
+.cat-3 { background: rgba(107, 74, 158, 0.15); color: var(--color-viola); }
+.cat-4 { background: rgba(221, 65, 36, 0.15);  color: var(--color-error); }
+.cat-5 { background: rgba(38, 128, 140, 0.15); color: #1F6F7A; }
+.cat-6 { background: var(--surface-color);     color: var(--text-main); }
+.cat-7 { background: rgba(170, 52, 120, 0.15); color: #9C2F6E; }
+
+body.dark-mode .cat-5 { background: rgba(38, 128, 140, 0.3); color: #7CCBD6; }
+body.dark-mode .cat-7 { background: rgba(170, 52, 120, 0.3); color: #E58BBE; }
+
+.dialogo-prodotto { width: 620px; }
+
+.campi-affiancati { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.campo-affiancato { min-width: 0; }
+
+.gruppo-contatto { border: none; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.gruppo-contatto legend { padding: 0; }
+
+.scelte-categorie {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-micro);
+    background: var(--input-bg);
+}
+
+.scelta-categoria {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    user-select: none;
+}
+.scelta-categoria:hover { background: var(--surface-color); }
+.scelta-categoria input[type="checkbox"] { margin: 0 8px 0 0; cursor: pointer; }
+
+#prodottoSottotitolo { font-size: 0.82rem; }
+
+
+.elenco-categorie {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 46vh;
+    overflow-y: auto;
+    margin-top: 14px;
+    padding: 2px;
+}
+
+.riga-categoria { display: flex; align-items: center; gap: 8px; }
+.riga-categoria .edit-input { flex: 1; min-width: 0; }
+
+.usi-categoria { width: 86px; flex-shrink: 0; font-size: 0.78rem; color: var(--text-main); text-align: right; }
+.usi-categoria.nessuno { color: var(--text-muted); opacity: 0.7; }
+
+.riga-aggiunta { display: flex; gap: 8px; align-items: center; margin-top: 14px; }
+.riga-aggiunta .edit-input { flex: 1; min-width: 0; }
+.riga-aggiunta .btn { flex-shrink: 0; }
