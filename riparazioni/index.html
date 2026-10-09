@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX — Riparazioni Industrial</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.cdnfonts.com https://fonts.googleapis.com; font-src https://fonts.cdnfonts.com https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self'">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23000000'/><path d='M 50,18 L 20,82 L 33,82 L 50,44 L 60,66 L 73,66 L 50,18 Z M 64,74 L 70,82 L 83,82 L 64,74 Z' fill='%23ffffff'/></svg>">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+    <link rel="stylesheet" href="../core/core.css">
+    <link rel="stylesheet" href="riparazioni.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-toprow">
+            <div class="brand-container">
+                <a class="brand-name" href="../" title="Torna al portale">APEX</a>
+            </div>
+            <div class="header-nav">
+                <div class="user-profile-wrapper">
+                    <div class="avatar-btn" id="utenteAvatar" data-action="profilo" title="Profilo utente">
+                        <span id="utenteIniziali">--</span>
+                    </div>
+                    <div class="profile-dropdown" id="menuProfilo" hidden>
+                        <div class="profile-user-card">
+                            <div class="avatar-btn avatar-large" id="utenteAvatarGrande"><span id="utenteInizialiGrandi">--</span></div>
+                            <div class="profile-user-details">
+                                <div class="profile-name" id="utenteNome"></div>
+                                <div class="profile-email" id="utenteEmail"></div>
+                            </div>
+                        </div>
+                        <div class="profile-menu-item" data-action="tema">
+                            <span class="material-symbols-outlined" id="iconaTema">dark_mode</span>
+                            <span id="testoTema">Modalità Scura</span>
+                        </div>
+                        <div class="profile-menu-item danger" data-action="logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Disconnetti Account</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-body">
+
+        <div class="header-actions-row">
+            <div class="header-actions">
+                <button type="button" class="btn btn-export" data-action="nuovo-contratto" id="btnNuovo" hidden>
+                    <span class="material-symbols-outlined">add_box</span> Nuovo Contratto
+                </button>
+                <button type="button" class="btn btn-theme" data-action="clienti" title="L'elenco dei clienti">
+                    <span class="material-symbols-outlined">groups</span> Clienti
+                </button>
+            </div>
+            <div class="stats-container">
+                <div class="stat-chip"><span class="stat-chip-label">Contratti</span><span class="stat-chip-value" id="statContratti">0</span></div>
+                <div class="stat-chip"><span class="stat-chip-label">Flussi aperti</span><span class="stat-chip-value" id="statFlussi">0</span></div>
+                <div class="stat-chip" title="Contratti scaduti o senza documenti"><span class="stat-chip-label">In rosso</span><span class="stat-chip-value" id="statRossi">0</span></div>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="ricerca">Ricerca Libera</label>
+                <input type="search" id="ricerca" class="standard-select campo-ricerca"
+                       placeholder="Cliente, contratto, numero di serie, DDT…" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="filter-group">
+                <label for="filtroResponsabile">Responsabile</label>
+                <select id="filtroResponsabile" class="standard-select"><option value="">Tutti</option></select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroLed">Stato</label>
+                <select id="filtroLed" class="standard-select"></select>
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <label class="spunta-filtro" title="Solo i contratti con un flusso in corso, già aperti, con il passaggio a cui ciascuno è fermo">
+                    <input type="checkbox" id="soloAperti"> Solo flussi aperti
+                </label>
+            </div>
+            <div class="filter-group filter-group-fine">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-theme" data-action="azzera-filtri" title="Resetta tutti i filtri">
+                    <span class="material-symbols-outlined">restart_alt</span> Resetta Filtri
+                </button>
+            </div>
+        </div>
+
+        <div class="riparazioni-avviso" id="avviso" hidden></div>
+
+        <main>
+            <div class="tabella-contenitore">
+                <table class="tabella-dati tabella-riparazioni">
+                    <thead id="intestazione"></thead>
+                    <tbody id="corpo"></tbody>
+                </table>
+                <p class="tabella-vuota" id="vuoto" hidden></p>
+            </div>
+        </main>
+    </div>
+
+    <dialog class="apex-dialog" id="dialogoPasso">
+        <h3 id="passoTitolo"></h3>
+        <p id="passoSottotitolo"></p>
+        <p class="nota-pannello" id="passoStorico" hidden></p>
+        <div class="dlg-errore" id="passoErrore" hidden></div>
+        <div id="campoNumero">
+            <label class="campo-label" for="passoNumero" id="etichettaNumero">Numero</label>
+            <input type="text" id="passoNumero" class="edit-input campo-passo" maxlength="60" autocomplete="off">
+        </div>
+        <div id="campoData">
+            <label class="campo-label" for="passoData">Data</label>
+            <input type="date" id="passoData" class="edit-input campo-passo">
+        </div>
+        <div id="campoLink">
+            <label class="campo-label" for="passoLink">Link al documento su Google Drive</label>
+            <input type="url" id="passoLink" class="edit-input campo-passo" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+            <a id="passoApri" class="link-documento" target="_blank" rel="noopener noreferrer" hidden>
+                <span class="material-symbols-outlined">open_in_new</span> Apri il documento
+            </a>
+        </div>
+        <div id="campoEsito" role="radiogroup" aria-labelledby="etichettaEsito">
+            <div class="campo-label" id="etichettaEsito">Da fatturare?</div>
+            <label class="scelta-esito"><input type="radio" name="esito" value="si" class="campo-passo"> Sì</label>
+            <label class="scelta-esito"><input type="radio" name="esito" value="no" class="campo-passo"> No, il flusso si chiude</label>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-passo" id="passoChiudi">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-passo" id="passoSalva">Completa</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoContratto">
+        <h3 id="contrattoTitolo">Nuovo contratto</h3>
+        <div class="dlg-errore" id="contrattoErrore" hidden></div>
+        <div class="campi-affiancati">
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoCliente">Cliente</label>
+                <select id="contrattoCliente" class="standard-select"></select>
+                <input type="text" id="contrattoNuovoCliente" class="edit-input campo-sotto" placeholder="Nome del nuovo cliente" maxlength="200" hidden>
+            </div>
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoPratica">Pratica</label>
+                <select id="contrattoPratica" class="standard-select"></select>
+                <input type="text" id="contrattoNuovaPratica" class="edit-input campo-sotto" placeholder="Nome della nuova pratica" maxlength="200" hidden>
+            </div>
+        </div>
+        <label class="campo-label" for="contrattoPraticaLink">Cartella della pratica su Google Drive (vale per tutti i suoi contratti)</label>
+        <input type="url" id="contrattoPraticaLink" class="edit-input" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+        <div class="campi-affiancati">
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoNome">Contratto</label>
+                <input type="text" id="contrattoNome" class="edit-input" maxlength="200" autocomplete="off">
+            </div>
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoResponsabile">Responsabile commerciale</label>
+                <select id="contrattoResponsabile" class="standard-select"></select>
+            </div>
+        </div>
+        <label class="campo-label" for="contrattoLink">Cartella del contratto su Google Drive</label>
+        <input type="url" id="contrattoLink" class="edit-input" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+        <div class="campi-affiancati">
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoSottoscrizione">Sottoscrizione</label>
+                <input type="date" id="contrattoSottoscrizione" class="edit-input">
+            </div>
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoConclusione">Conclusione</label>
+                <input type="date" id="contrattoConclusione" class="edit-input">
+            </div>
+        </div>
+        <label class="campo-label" for="contrattoSintesi">Sintesi del contratto</label>
+        <textarea id="contrattoSintesi" class="form-textarea" rows="3" maxlength="2000"></textarea>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-contratto">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-contratto">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoStrumenti">
+        <h3>Strumenti del contratto</h3>
+        <p id="strumentiSottotitolo"></p>
+        <div class="dlg-errore" id="strumentiErrore" hidden></div>
+        <div class="elenco-strumenti" id="elencoStrumenti"></div>
+        <div id="aggiungiStrumento">
+            <div class="campo-label">Aggiungi uno strumento</div>
+            <div class="riga-aggiunta">
+                <select id="strumentoModello" class="standard-select"></select>
+                <input type="text" id="strumentoSerie" class="edit-input" placeholder="Numero di serie" maxlength="80" autocomplete="off" spellcheck="false">
+                <button type="button" class="btn btn-export" data-action="aggiungi-strumento"><span class="material-symbols-outlined">add</span> Aggiungi</button>
+            </div>
+            <p class="nota-pannello" id="modelliVuoti" hidden>Asset non ha ancora modelli Industrial: lo strumento si registra dopo averne aggiunto il modello là.</p>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-strumenti">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoStoria">
+        <h3 id="storiaTitolo"></h3>
+        <p id="storiaSottotitolo"></p>
+        <div class="campo-label">Contratti</div>
+        <ul class="elenco-storia" id="storiaContratti"></ul>
+        <div class="campo-label">Flussi</div>
+        <ul class="elenco-storia" id="storiaFlussi"></ul>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-storia">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoFlusso">
+        <h3 id="flussoTitoloPannello">Nuovo flusso</h3>
+        <p id="flussoSottotitolo"></p>
+        <div class="dlg-errore" id="flussoErrore" hidden></div>
+        <label class="campo-label" for="flussoTitolo">Titolo (per esempio il guasto)</label>
+        <input type="text" id="flussoTitolo" class="edit-input" maxlength="200" autocomplete="off">
+        <div class="campo-label">Strumenti (un brand solo: è il fornitore)</div>
+        <div class="scelte-strumenti" id="flussoStrumenti"></div>
+        <p class="nota-pannello" id="flussoBloccati" hidden>Il DDT dal cliente è già fatto: gli strumenti di questo flusso non si cambiano più.</p>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-flusso">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-flusso">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoClienti">
+        <h3>Clienti</h3>
+        <p>Il nome si salva uscendo dal campo.</p>
+        <div class="dlg-errore" id="clientiErrore" hidden></div>
+        <div class="elenco-clienti" id="elencoClienti"></div>
+        <div class="riga-aggiunta" id="rigaNuovoCliente">
+            <input type="text" id="nuovoCliente" class="edit-input" placeholder="Nuovo cliente" maxlength="200" autocomplete="off">
+            <button type="button" class="btn btn-export" data-action="aggiungi-cliente"><span class="material-symbols-outlined">add</span> Aggiungi</button>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-clienti">Chiudi</button>
+        </div>
+    </dialog>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

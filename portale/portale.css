@@ -1,0 +1,175 @@
+
+.portale-corpo {
+    padding: var(--grid-spacing) var(--spazio-moduli, var(--grid-spacing));
+}
+
+.portale-corpo h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 8px 0 4px 0;
+}
+
+.portale-corpo .sottotitolo {
+    margin: 0 0 var(--spazio-moduli, var(--grid-spacing)) 0;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.moduli {
+    --larghezza-scheda: 272px;
+    display: grid;
+    grid-template-columns: repeat(var(--colonne-moduli, auto-fill), var(--larghezza-scheda));
+    gap: var(--spazio-moduli, 14px);
+}
+
+.modulo-card {
+    --bg-color: var(--color-black);
+    --text-main: var(--color-white);
+    --altezza-barra: 29px;
+}
+
+body.dark-mode .modulo-card {
+    --bg-color: var(--color-white);
+    --text-main: var(--color-black);
+}
+
+.modulo-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    aspect-ratio: 1.618 / 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    overflow: hidden;
+    border: none;
+    border-radius: var(--border-radius-component);
+    background: linear-gradient(var(--bg-color), var(--bg-color)) top / 100% calc(100% - var(--altezza-barra)) no-repeat;
+    color: var(--text-main);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.modulo-card.non-pronto {
+    outline: 1px dashed var(--color-gray-neutral);
+    outline-offset: -1px;
+}
+
+.modulo-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.modulo-icona {
+    width: 28px;
+    height: 28px;
+    display: block;
+    flex-shrink: 0;
+    margin: 18px 0 0 16px;
+    fill: var(--text-main);
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modulo-card:hover .modulo-icona {
+    transform: rotate(360deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modulo-icona {
+        transition: none;
+    }
+}
+
+.modulo-barra {
+    position: relative;
+    margin-top: auto;
+    align-self: stretch;
+    height: var(--altezza-barra);
+    border-radius: 0 0 var(--border-radius-component) var(--border-radius-component);
+    box-sizing: border-box;
+    padding: 0 10px 0 16px;
+    display: flex;
+    align-items: center;
+    color: var(--color-white);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: height 0.25s ease;
+}
+
+.modulo-card:hover .modulo-barra {
+    height: calc(var(--altezza-barra) * 2);
+}
+
+.modulo-barra .nome {
+    min-width: 0;
+    max-width: calc(100% - 64px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: font-size 0.25s ease, max-width 0.25s ease;
+}
+
+.modulo-card:hover .modulo-barra .nome {
+    font-size: 1rem;
+    max-width: 100%;
+}
+
+.modulo-card .modulo-barra .ruolo-pill {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-white);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.modulo-card:hover .modulo-barra .ruolo-pill {
+    transform: translate(24px, -50%);
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modulo-barra,
+    .modulo-barra .nome,
+    .modulo-card .modulo-barra .ruolo-pill {
+        transition: none;
+    }
+}
+
+.barra-asset { background: linear-gradient(90deg, #1E2370, #3A6FB0 55%, #4AB4E0); }
+.barra-progetti { background: linear-gradient(90deg, #E81010, #F26A20 55%, #FFA030); }
+.barra-acquisti { background: linear-gradient(90deg, #F9A050, #FFD24A); }
+.barra-marketing { background: linear-gradient(90deg, #FF4FD2, #FF9A8F 55%, #FFC35E); }
+.barra-formazione { background: linear-gradient(90deg, #16968A, #5BE3C4); }
+.barra-admin { background: linear-gradient(90deg, #A04BF5, #F05AA8); }
+.barra-default { background: linear-gradient(90deg, #5C86FF, #A9D4FF); }
+
+.modulo-marchio {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 1px 5px;
+    border: 1px solid var(--text-main);
+    border-radius: 3px;
+    color: var(--text-main);
+    font-size: 0.55rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    line-height: 1.5;
+}
+
+
+.portale-vuoto {
+    padding: 28px;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--border-radius-component);
+    color: var(--text-muted);
+    text-align: center;
+    font-size: 0.95rem;
+}
