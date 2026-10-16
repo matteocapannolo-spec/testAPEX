@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX — Task</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.cdnfonts.com https://fonts.googleapis.com; font-src https://fonts.cdnfonts.com https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self'">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23000000'/><path d='M 50,18 L 20,82 L 33,82 L 50,44 L 60,66 L 73,66 L 50,18 Z M 64,74 L 70,82 L 83,82 L 64,74 Z' fill='%23ffffff'/></svg>">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+    <link rel="stylesheet" href="../core/core.css">
+    <link rel="stylesheet" href="task.css">
+    <link rel="stylesheet" href="reparti.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-toprow">
+            <div class="brand-container">
+                <a class="brand-name" href="../" title="Torna al portale">APEX</a>
+            </div>
+            <div class="header-nav">
+                <div class="user-profile-wrapper">
+                    <div class="avatar-btn" id="utenteAvatar" data-action="profilo" title="Profilo utente">
+                        <span id="utenteIniziali">--</span>
+                    </div>
+                    <div class="profile-dropdown" id="menuProfilo" hidden>
+                        <div class="profile-user-card">
+                            <div class="avatar-btn avatar-large" id="utenteAvatarGrande"><span id="utenteInizialiGrandi">--</span></div>
+                            <div class="profile-user-details">
+                                <div class="profile-name" id="utenteNome"></div>
+                                <div class="profile-email" id="utenteEmail"></div>
+                            </div>
+                        </div>
+                        <div class="profile-menu-item" data-action="tema">
+                            <span class="material-symbols-outlined" id="iconaTema">dark_mode</span>
+                            <span id="testoTema">Modalità Scura</span>
+                        </div>
+                        <div class="profile-menu-item danger" data-action="logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Disconnetti Account</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-body">
+
+        <div class="header-actions-row">
+            <div class="header-actions">
+                <button type="button" class="btn btn-theme" data-action="archivio" id="btnArchivio" hidden>
+                    <span class="material-symbols-outlined">inventory_2</span> Archivio
+                </button>
+                <button type="button" class="btn btn-theme" data-action="reparti" id="btnReparti" hidden>
+                    <span class="material-symbols-outlined">groups</span> Reparti
+                </button>
+            </div>
+            <div class="stats-container">
+                <div class="stat-chip"><span class="stat-chip-label">Schede</span><span class="stat-chip-value" id="statSchede">0</span></div>
+                <div class="stat-chip"><span class="stat-chip-label">Scadute</span><span class="stat-chip-value" id="statScadute">0</span></div>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="vista">Bacheca</label>
+                <select id="vista" class="standard-select"></select>
+            </div>
+            <div class="filter-group" id="gruppoModoMie">
+                <label for="modoMie">Raggruppa</label>
+                <select id="modoMie" class="standard-select">
+                    <option value="scadenza">Per scadenza</option>
+                    <option value="reparto">Per reparto e bacheca</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="ricerca">Ricerca Libera</label>
+                <input type="search" id="ricerca" class="standard-select campo-ricerca"
+                       placeholder="Titolo, descrizione, etichetta…" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="filter-group" id="gruppoMembro">
+                <label for="filtroMembro">Membro</label>
+                <select id="filtroMembro" class="standard-select"><option value="">Tutti</option></select>
+            </div>
+            <div class="filter-group filter-group-fine">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-theme" data-action="azzera-filtri" title="Resetta tutti i filtri">
+                    <span class="material-symbols-outlined">restart_alt</span> Resetta Filtri
+                </button>
+            </div>
+        </div>
+
+        <div class="task-avviso" id="avviso" hidden></div>
+
+        <main class="tabellone" id="tabellone"></main>
+    </div>
+
+    <dialog class="apex-dialog dialogo-scheda" id="dialogoScheda">
+        <div class="scheda-cima">
+            <select id="schedaColonna" class="standard-select" aria-label="Colonna"></select>
+            <span class="storia-nota" id="schedaDove"></span>
+            <button type="button" class="btn btn-theme btn-sposta" data-action="sposta-scheda" id="btnSpostaScheda" title="Sposta in un'altra bacheca, anche di un altro reparto" hidden><span class="material-symbols-outlined">drive_file_move</span> Sposta</button>
+            <button type="button" class="action-btn" data-action="chiudi-scheda" title="Chiudi"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="dlg-errore" id="schedaErrore" hidden></div>
+        <div class="scheda-griglia">
+            <div class="scheda-sinistra">
+                <div class="scheda-titolo-riga">
+                    <button type="button" class="cerchio" id="schedaCompleta" data-action="completa"><span class="material-symbols-outlined">check</span></button>
+                    <textarea id="schedaTitolo" class="scheda-titolo" rows="2" maxlength="500" aria-label="Titolo"></textarea>
+                </div>
+                <div class="scheda-campi">
+                    <div>
+                        <div class="campo-label">Membri</div>
+                        <div class="scheda-membri"><span id="schedaMembri"></span>
+                            <select id="schedaNuovoMembro" class="standard-select select-piccola" aria-label="Aggiungi un membro"></select></div>
+                    </div>
+                    <div>
+                        <label class="campo-label" for="schedaScadenza">Scadenza</label>
+                        <input type="datetime-local" id="schedaScadenza" class="edit-input">
+                    </div>
+                </div>
+                <div class="campo-label">Etichette</div>
+                <div class="scheda-etichette" id="schedaEtichette"></div>
+
+                <div class="campo-label">Descrizione</div>
+                <div class="descrizione-vista" id="schedaDescrizioneVista" data-action="modifica-descrizione" title="Clic per modificare"></div>
+                <textarea id="schedaDescrizione" class="form-textarea" rows="6" maxlength="10000" hidden></textarea>
+
+                <div id="schedaChecklist"></div>
+                <div class="riga-aggiunta nuova-checklist">
+                    <input type="text" id="nuovaChecklist" class="edit-input" placeholder="Nome di una nuova checklist" maxlength="120" autocomplete="off">
+                    <button type="button" class="btn btn-theme" data-action="nuova-checklist"><span class="material-symbols-outlined">checklist</span> Aggiungi checklist</button>
+                </div>
+            </div>
+            <div class="scheda-destra">
+                <div class="campo-label">Commenti e attività</div>
+                <textarea id="nuovoCommento" class="form-textarea" rows="2" maxlength="5000" placeholder="Scrivi un commento…"></textarea>
+                <div class="aggiunta-azioni"><button type="button" class="btn btn-primario" data-action="invia-commento">Salva</button></div>
+                <div id="schedaStoria"></div>
+            </div>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-danger" data-action="elimina-scheda"><span class="material-symbols-outlined">delete</span> Elimina scheda</button>
+            <button type="button" class="btn btn-primario" data-action="chiudi-scheda">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoSposta">
+        <h3>Sposta la scheda</h3>
+        <p>In un'altra bacheca, anche di un altro reparto. Commenti, checklist e cronologia la seguono.</p>
+        <div class="dlg-errore" id="spostaErrore" hidden></div>
+        <label class="campo-label" for="spostaBacheca">Bacheca</label>
+        <select id="spostaBacheca" class="standard-select"></select>
+        <label class="campo-label" for="spostaColonna">Colonna</label>
+        <select id="spostaColonna" class="standard-select"></select>
+        <p class="sposta-avviso" id="spostaAvviso" hidden></p>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-sposta">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="conferma-sposta" id="btnConfermaSposta" disabled>Sposta</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoBacheca">
+        <h3 id="bachecaTitolo">Bacheca</h3>
+        <div class="dlg-errore" id="bachecaErrore" hidden></div>
+        <label class="campo-label" for="bachecaNome">Nome</label>
+        <input type="text" id="bachecaNome" class="edit-input" maxlength="80" autocomplete="off">
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-danger" data-action="elimina-bacheca" id="btnEliminaBacheca" hidden>Elimina</button>
+            <button type="button" class="btn btn-theme" data-action="chiudi-bacheca">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-bacheca">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoColonna">
+        <h3 id="colonnaTitolo">Colonna</h3>
+        <div class="dlg-errore" id="colonnaErrore" hidden></div>
+        <label class="campo-label" for="colonnaNome">Nome (le emoji si possono scrivere nel nome)</label>
+        <input type="text" id="colonnaNome" class="edit-input" maxlength="80" autocomplete="off">
+        <label class="spunta-riga"><input type="checkbox" id="colonnaFine"> Colonna di fine (Done): spostarci una scheda la segna completata, e spuntare il cerchio ce la porta</label>
+        <label class="spunta-riga" id="rigaColonnaTicket" hidden><input type="checkbox" id="colonnaTicket"> Qui arrivano i ticket di Asset (una colonna sola in tutto Task)</label>
+        <div class="riga-aggiunta" id="rigaSpostaColonna">
+            <button type="button" class="btn btn-theme" data-action="sposta-colonna" data-verso="-1"><span class="material-symbols-outlined">arrow_back</span> Sposta a sinistra</button>
+            <button type="button" class="btn btn-theme" data-action="sposta-colonna" data-verso="1">Sposta a destra <span class="material-symbols-outlined">arrow_forward</span></button>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-danger" data-action="elimina-colonna" id="btnEliminaColonna" hidden>Elimina</button>
+            <button type="button" class="btn btn-theme" data-action="chiudi-colonna">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-colonna">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoArchivio">
+        <h3 id="archivioTitolo">Archivio</h3>
+        <p id="archivioNota"></p>
+        <div class="dlg-errore" id="archivioErrore" hidden></div>
+        <input type="search" id="archivioRicerca" class="edit-input" placeholder="Cerca nell'archivio…" autocomplete="off">
+        <div class="archivio-elenco" id="archivioElenco"></div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-archivio">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoReparti">
+        <h3>Reparti</h3>
+        <p>Chi lavora in un reparto ne vede le bacheche e le schede. Clicca un reparto per aprirlo; rinominarlo o eliminarlo sta nel menu «⋯».</p>
+        <div class="dlg-errore" id="repartiErrore" hidden></div>
+        <div id="elencoReparti"></div>
+        <button type="button" class="pillola-aggiungi nuovo-reparto" id="pillolaNuovoReparto" data-action="mostra-nuovo-reparto"><span class="material-symbols-outlined">add</span>Nuovo reparto</button>
+        <div class="riga-aggiunta" id="rigaNuovoReparto" hidden>
+            <input type="text" id="nuovoReparto" class="edit-input" placeholder="Nome del reparto (nasce con le etichette di sempre)" maxlength="80" autocomplete="off">
+            <button type="button" class="btn btn-export" data-action="nuovo-reparto"><span class="material-symbols-outlined">add</span> Crea</button>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-reparti">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoEtichette">
+        <h3>Etichette</h3>
+        <p id="etichetteSottotitolo"></p>
+        <div class="dlg-errore" id="etichetteErrore" hidden></div>
+        <div id="elencoEtichette"></div>
+        <div class="campo-label">Nuova etichetta</div>
+        <div class="riga-etichetta" id="rigaNuovaEtichetta">
+            <span id="nuovaEtichettaAnteprima"></span>
+            <input type="text" id="nuovaEtichetta" class="edit-input" placeholder="Nome" maxlength="60" autocomplete="off">
+            <span class="coppia-selettori" id="nuovaEtichettaColori"></span>
+            <button type="button" class="btn btn-export" data-action="nuova-etichetta"><span class="material-symbols-outlined">add</span> Crea</button>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-etichette">Chiudi</button>
+        </div>
+    </dialog>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

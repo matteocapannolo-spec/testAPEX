@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX — Directory Acquisti</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.cdnfonts.com https://fonts.googleapis.com; font-src https://fonts.cdnfonts.com https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self'">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23000000'/><path d='M 50,18 L 20,82 L 33,82 L 50,44 L 60,66 L 73,66 L 50,18 Z M 64,74 L 70,82 L 83,82 L 64,74 Z' fill='%23ffffff'/></svg>">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+    <link rel="stylesheet" href="../core/core.css">
+    <link rel="stylesheet" href="acquisti.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-toprow">
+            <div class="brand-container">
+                <a class="brand-name" href="../" title="Torna al portale">APEX</a>
+            </div>
+
+            <div class="header-nav">
+                <div class="user-profile-wrapper">
+                    <div class="avatar-btn" id="utenteAvatar" data-action="profilo" title="Profilo utente">
+                        <span id="utenteIniziali">--</span>
+                    </div>
+
+                    <div class="profile-dropdown" id="menuProfilo" hidden>
+                        <div class="profile-user-card">
+                            <div class="avatar-btn avatar-large" id="utenteAvatarGrande">
+                                <span id="utenteInizialiGrandi">--</span>
+                            </div>
+                            <div class="profile-user-details">
+                                <div class="profile-name" id="utenteNome"></div>
+                                <div class="profile-email" id="utenteEmail"></div>
+                                <div class="profile-role-badge" id="utenteBadge" hidden></div>
+                            </div>
+                        </div>
+
+                        <div class="profile-menu-item" data-action="tema">
+                            <span class="material-symbols-outlined" id="iconaTema">dark_mode</span>
+                            <span id="testoTema">Modalità Scura</span>
+                        </div>
+
+                        <div class="profile-menu-item danger" data-action="logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Disconnetti Account</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-body">
+
+        <div class="header-actions-row">
+            <div class="header-actions">
+                <button type="button" class="btn btn-export" data-action="nuovo-prodotto" id="btnNuovo" hidden
+                        title="Aggiungi un prodotto alla directory: il link e' facoltativo">
+                    <span class="material-symbols-outlined">add_box</span> Nuovo Prodotto
+                </button>
+                <button type="button" class="btn btn-theme" data-action="categorie" id="btnCategorie" hidden
+                        title="Aggiungi, rinomina o elimina le categorie">
+                    <span class="material-symbols-outlined">sell</span> Categorie
+                </button>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-chip">
+                    <span class="stat-chip-label">Prodotti</span>
+                    <span class="stat-chip-value" id="statTotale">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="ricerca">Ricerca Libera</label>
+                <input type="search" id="ricerca" class="standard-select campo-ricerca"
+                       placeholder="Prodotto, negozio, nota, categoria…" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="filter-group">
+                <label for="filtroCategoria">Categoria</label>
+                <select id="filtroCategoria" class="standard-select">
+                    <option value="">Tutte le categorie</option>
+                </select>
+            </div>
+            <div class="filter-group filter-group-fine">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-theme" data-action="azzera-filtri" title="Resetta tutti i filtri">
+                    <span class="material-symbols-outlined">restart_alt</span> Resetta Filtri
+                </button>
+            </div>
+        </div>
+
+        <div class="acquisti-avviso" id="avviso" hidden></div>
+
+        <main>
+            <div class="tabella-contenitore">
+                <table class="tabella-dati tabella-acquisti">
+                    <thead id="intestazione"></thead>
+                    <tbody id="corpo"></tbody>
+                </table>
+                <p class="tabella-vuota" id="vuoto" hidden></p>
+            </div>
+        </main>
+
+    </div>
+
+    <dialog class="apex-dialog dialogo-prodotto" id="dialogoProdotto">
+        <h3 id="prodottoTitolo">Nuovo prodotto</h3>
+        <p id="prodottoSottotitolo" hidden></p>
+        <div class="dlg-errore" id="prodottoErrore" hidden></div>
+
+        <label class="campo-label" for="prodottoNome">Nome prodotto</label>
+        <input type="text" id="prodottoNome" class="edit-input" data-campo="nome" maxlength="200" autocomplete="off">
+
+        <div class="campi-affiancati">
+            <div class="campo-affiancato">
+                <label class="campo-label" for="prodottoAzienda">Azienda</label>
+                <input type="text" id="prodottoAzienda" class="edit-input" data-campo="azienda" maxlength="200" autocomplete="off">
+            </div>
+            <div class="campo-affiancato">
+                <label class="campo-label" for="prodottoUrl">Link</label>
+                <input type="url" id="prodottoUrl" class="edit-input" data-campo="url" placeholder="https://…" autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+
+        <div class="campo-label" id="etichettaCategorie">Categorie</div>
+        <div class="scelte-categorie" id="prodottoCategorie" role="group" aria-labelledby="etichettaCategorie"></div>
+
+        <div class="campi-affiancati">
+            <fieldset class="gruppo-contatto">
+                <legend class="campo-label">Contatto 1</legend>
+                <input type="text" class="edit-input" data-campo="contatto1_nome" placeholder="Nome e cognome" aria-label="Contatto 1, nome e cognome" maxlength="120" autocomplete="off">
+                <input type="tel" class="edit-input" data-campo="contatto1_tel" placeholder="Telefono" aria-label="Contatto 1, telefono" maxlength="60" autocomplete="off">
+                <input type="email" class="edit-input" data-campo="contatto1_email" placeholder="Email" aria-label="Contatto 1, email" maxlength="200" autocomplete="off" spellcheck="false">
+            </fieldset>
+            <fieldset class="gruppo-contatto">
+                <legend class="campo-label">Contatto 2</legend>
+                <input type="text" class="edit-input" data-campo="contatto2_nome" placeholder="Nome e cognome" aria-label="Contatto 2, nome e cognome" maxlength="120" autocomplete="off">
+                <input type="tel" class="edit-input" data-campo="contatto2_tel" placeholder="Telefono" aria-label="Contatto 2, telefono" maxlength="60" autocomplete="off">
+                <input type="email" class="edit-input" data-campo="contatto2_email" placeholder="Email" aria-label="Contatto 2, email" maxlength="200" autocomplete="off" spellcheck="false">
+            </fieldset>
+        </div>
+
+        <label class="campo-label" for="prodottoNote">Note</label>
+        <textarea id="prodottoNote" class="form-textarea" data-campo="note" rows="2" maxlength="1000"></textarea>
+
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-prodotto">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-prodotto">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoCategorie">
+        <h3>Categorie</h3>
+        <p>Il nome si salva uscendo dal campo. Una categoria usata da qualche prodotto non si
+           elimina: prima va tolta da quei prodotti.</p>
+        <div class="dlg-errore" id="categorieErrore" hidden></div>
+        <div class="elenco-categorie" id="elencoCategorie"></div>
+
+        <div class="riga-aggiunta">
+            <input type="text" id="nuovaCategoria" class="edit-input" placeholder="Nuova categoria"
+                   maxlength="60" autocomplete="off">
+            <button type="button" class="btn btn-export" data-action="aggiungi-categoria">
+                <span class="material-symbols-outlined">add</span> Aggiungi
+            </button>
+        </div>
+
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-categorie">Chiudi</button>
+        </div>
+    </dialog>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
