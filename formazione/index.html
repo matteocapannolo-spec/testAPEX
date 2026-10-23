@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formazione | APEX</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self' 'sha256-kc5CmThUhpgcZ8aFURmQysID/JfaJEAVT+PV3OzmETQ=' https://cdn.jsdelivr.net; style-src 'self' https://fonts.cdnfonts.com https://fonts.googleapis.com; font-src https://fonts.cdnfonts.com https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self'">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2316968A'/><stop offset='1' stop-color='%235BE3C4'/></linearGradient></defs><rect width='100' height='100' rx='18' fill='url(%23g)'/><g fill='%23ffffff' transform='translate(20 20) scale(2.5)'><circle cx='12' cy='12' r='4.2'/> <circle cx='12' cy='3.4' r='2'/> <circle cx='18.08' cy='5.92' r='2'/> <circle cx='20.6' cy='12' r='2'/> <circle cx='18.08' cy='18.08' r='2'/> <circle cx='12' cy='20.6' r='2'/> <circle cx='5.92' cy='18.08' r='2'/> <circle cx='3.4' cy='12' r='2'/> <circle cx='5.92' cy='5.92' r='2'/></g></svg>">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,add_box,assignment_ind,badge,bar_chart,block,cancel,check_circle,checklist,class,code,content_copy,dark_mode,delete,edit,edit_note,email,error,event,event_available,event_repeat,fact_check,function,group_add,health_and_safety,hourglass_empty,http,input,key,keyboard_double_arrow_left,keyboard_double_arrow_right,lan,light_mode,list_alt,logout,menu_book,note,notifications,open_in_new,outgoing_mail,person,person_add,person_off,piano,restart_alt,save,school,search,select,sticky_note_2,style,tab,task_alt,undo,update,workspace_premium&display=block">
+
+    <link rel="stylesheet" href="../core/core.css">
+    <link rel="stylesheet" href="formazione.css">
+    <link rel="modulepreload" href="../core/auth.js">
+    <link rel="modulepreload" href="../core/notifiche.js">
+    <link rel="modulepreload" href="../core/permissions.js">
+    <link rel="modulepreload" href="../core/supabase.js">
+    <link rel="modulepreload" href="../core/table.js">
+    <link rel="modulepreload" href="../core/ui.js">
+    <link rel="modulepreload" href="anagrafica.js">
+    <link rel="modulepreload" href="api.js">
+    <link rel="modulepreload" href="assegnazioni.js">
+    <link rel="modulepreload" href="casella.js">
+    <link rel="modulepreload" href="catalogo.js">
+    <link rel="modulepreload" href="conferme.js">
+    <link rel="modulepreload" href="config.js">
+    <link rel="modulepreload" href="dialoghi.js">
+    <link rel="modulepreload" href="main.js">
+    <link rel="modulepreload" href="mia.js">
+    <link rel="modulepreload" href="pannelli-sicurezza.js">
+    <link rel="modulepreload" href="pannelli.js">
+    <link rel="modulepreload" href="persone.js">
+    <link rel="modulepreload" href="sicurezza.js">
+    <link rel="modulepreload" href="statistiche.js">
+    <link rel="modulepreload" href="stato.js">
+    <link rel="modulepreload" href="storico.js">
+    <link rel="modulepreload" href="vista.js">
+</head>
+<body>
+    <script>(function(){try{if(localStorage.getItem('apex-tema')==='scuro')document.body.classList.add('dark-mode')}catch(e){}})();</script>
+
+    <header class="header">
+        <div class="header-toprow">
+            <div class="brand-container">
+                <a class="brand-name" href="../" title="Torna al portale">APEX</a>
+            </div>
+
+            <div class="header-nav">
+                <div class="user-profile-wrapper">
+                    <div class="avatar-btn" id="utenteAvatar" data-action="profilo" title="Profilo utente">
+                        <span id="utenteIniziali">--</span>
+                    </div>
+
+                    <div class="profile-dropdown" id="menuProfilo" hidden>
+                        <div class="profile-user-card">
+                            <div class="avatar-btn avatar-large" id="utenteAvatarGrande">
+                                <span id="utenteInizialiGrandi">--</span>
+                            </div>
+                            <div class="profile-user-details">
+                                <div class="profile-name" id="utenteNome"></div>
+                                <div class="profile-email" id="utenteEmail"></div>
+                            </div>
+                        </div>
+
+                        <div class="profile-menu-item" data-action="tema">
+                            <span class="material-symbols-outlined" id="iconaTema">dark_mode</span>
+                            <span id="testoTema">Modalità Scura</span>
+                        </div>
+
+                        <div class="profile-menu-item danger" data-action="logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Disconnetti Account</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-body">
+
+        <nav class="barra-schede" id="schede" role="tablist" hidden>
+            <button type="button" class="btn btn-theme" role="tab" data-action="scheda" data-scheda="mia">
+                <span class="material-symbols-outlined">person</span> La mia formazione</button>
+            <button type="button" class="btn btn-theme" role="tab" data-action="scheda" data-scheda="formazione" hidden>
+                <span class="material-symbols-outlined">school</span> Formazione</button>
+            <button type="button" class="btn btn-theme" role="tab" data-action="scheda" data-scheda="sicurezza" hidden>
+                <span class="material-symbols-outlined">health_and_safety</span> Salute e sicurezza</button>
+        </nav>
+
+        <div class="formazione-avviso" id="avviso" hidden></div>
+
+        <main>
+            <section class="pannello pannello-scorre" data-pannello="mia" hidden>
+                <div class="header-actions-row">
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label for="miaAnno">Anno</label>
+                            <select id="miaAnno" class="standard-select"></select>
+                        </div>
+                    </div>
+                    <div class="stats-container">
+                        <div class="stat-chip"><span class="stat-chip-label">Ore confermate</span><span class="stat-chip-value" id="miaOre">0 h</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">Obiettivo</span><span class="stat-chip-value" id="miaObiettivo">—</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">Piano</span><span class="stat-chip-value" id="miaPercentuale">—</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">Da confermare</span><span class="stat-chip-value" id="miaDaConfermare">0</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">In ritardo</span><span class="stat-chip-value" id="miaRitardo">0</span></div>
+                    </div>
+                </div>
+                <p class="nota-pannello" id="miaObiettivi" hidden></p>
+                <p class="nota-pannello">Passa sul nome di un corso per dichiarare quando l'hai fatto e quante ore ci hai messo. Le ore contano quando l'amministratore le conferma.</p>
+
+                <h2 class="titolo-sezione">Corsi assegnati</h2>
+                <div class="tabella-contenitore"><table class="tabella-dati"><thead id="mia-testa"></thead><tbody id="mia-corpo"></tbody></table>
+                    <p class="tabella-vuota" id="mia-vuoto" hidden></p></div>
+
+                <h2 class="titolo-sezione">Salute e sicurezza</h2>
+                <div class="tabella-contenitore"><table class="tabella-dati"><thead id="mia-sic-testa"></thead><tbody id="mia-sic-corpo"></tbody></table>
+                    <p class="tabella-vuota" id="mia-sic-vuoto" hidden></p></div>
+            </section>
+
+            <section class="pannello" data-pannello="formazione" hidden>
+                <div class="header-actions-row">
+                    <div class="header-actions">
+                        <button type="button" class="btn btn-export" data-action="assegna"><span class="material-symbols-outlined">group_add</span> Assegna corso</button>
+                        <button type="button" class="btn btn-theme" data-action="apri-pannello" data-dialogo="pannelloConferme"><span class="material-symbols-outlined">fact_check</span> Da confermare <span class="conta" id="contaConferme" hidden>0</span></button>
+                        <button type="button" class="btn btn-theme" data-action="apri-pannello" data-dialogo="pannelloAssegnazioni"><span class="material-symbols-outlined">assignment_ind</span> Assegnazioni</button>
+                        <button type="button" class="btn btn-theme" data-action="apri-pannello" data-dialogo="pannelloCatalogo"><span class="material-symbols-outlined">menu_book</span> Catalogo</button>
+                        <button type="button" class="btn btn-theme" data-action="apri-pannello" data-dialogo="pannelloStatistiche"><span class="material-symbols-outlined">bar_chart</span> Statistiche</button>
+                    </div>
+                    <div class="stats-container">
+                        <div class="stat-chip"><span class="stat-chip-label">Ore confermate</span><span class="stat-chip-value" id="frmOre">0 h</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">Persone formate</span><span class="stat-chip-value" id="frmPersone">0</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">Costo sostenuto</span><span class="stat-chip-value" id="frmCosto">—</span></div>
+                        <div class="stat-chip" title="Il costo di tutti i corsi assegnati nel piano di quest'anno, fatti o no"><span class="stat-chip-label">Costo previsto</span><span class="stat-chip-value" id="frmPrevisto">—</span></div>
+                    </div>
+                </div>
+                <div class="filters-container">
+                    <div class="filter-group"><label for="perAnno">Anno del piano</label><select id="perAnno" class="standard-select"></select></div>
+                    <div class="filter-group"><label for="perReparto">Reparto</label><select id="perReparto" class="standard-select"></select></div>
+                    <div class="filter-group filter-group-fine"><label>&nbsp;</label>
+                        <button type="button" class="btn btn-theme" data-action="reparti" title="Aggiungi, rinomina o elimina i reparti"><span class="material-symbols-outlined">lan</span> Reparti</button></div>
+                </div>
+                <div class="tabella-contenitore tabella-piena"><table class="tabella-dati"><thead id="per-testa"></thead><tbody id="per-corpo"></tbody></table>
+                    <p class="tabella-vuota" id="per-vuoto" hidden></p></div>
+            </section>
+
+            <section class="pannello" data-pannello="sicurezza" hidden>
+                <div class="header-actions-row">
+                    <div class="header-actions">
+                        <button type="button" class="btn btn-theme" data-action="apri-pannello" data-dialogo="pannelloAnagrafica"><span class="material-symbols-outlined">badge</span> Persone</button>
+                        <button type="button" class="btn btn-theme" data-action="apri-pannello" data-dialogo="pannelloObblighi"><span class="material-symbols-outlined">checklist</span> Obblighi</button>
+                        <button type="button" class="btn btn-theme" data-action="copia-persone" title="Copia nome, email, nascita e codice fiscale delle persone mostrate, da incollare in Excel"><span class="material-symbols-outlined">content_copy</span> Copia</button>
+                    </div>
+                    <div class="stats-container">
+                        <div class="stat-chip"><span class="stat-chip-label">Scaduti</span><span class="stat-chip-value" id="sicScaduti">0</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">In scadenza</span><span class="stat-chip-value" id="sicInScadenza">0</span></div>
+                        <div class="stat-chip"><span class="stat-chip-label">Da fare</span><span class="stat-chip-value" id="sicDaFare">0</span></div>
+                        <div class="stat-chip" title="Quanto è costato quest'anno, dalle registrazioni"><span class="stat-chip-label" id="sicCostoEtichetta">Costo</span><span class="stat-chip-value" id="sicCosto">—</span></div>
+                    </div>
+                </div>
+                <div class="filters-container">
+                    <div class="filter-group"><label for="sicRicerca">Ricerca</label>
+                        <input type="search" id="sicRicerca" class="standard-select campo-ricerca" placeholder="Cognome o nome" autocomplete="off" spellcheck="false"></div>
+                    <div class="filter-group"><label for="sicMansione">Mansione</label><select id="sicMansione" class="standard-select"></select></div>
+                    <div class="filter-group"><label for="sicStato">Mostra</label>
+                        <select id="sicStato" class="standard-select">
+                            <option value="">Tutte le persone</option>
+                            <option value="problemi" selected>Con qualcosa scaduto, in scadenza o da fare</option>
+                            <option value="scaduto">Con qualcosa scaduto</option>
+                            <option value="in_scadenza">Con qualcosa in scadenza</option>
+                            <option value="da_fare">Con qualcosa da fare</option>
+                        </select></div>
+                    <div class="filter-group filter-group-fine"><label>&nbsp;</label>
+                        <button type="button" class="btn btn-theme" data-action="azzera-sicurezza"><span class="material-symbols-outlined">restart_alt</span> Resetta Filtri</button></div>
+                </div>
+                <p class="nota-pannello">Clicca una casella per segnare un corso fatto, una visita, un appuntamento o una nota. «In scadenza» vuol dire entro 30 giorni.</p>
+                <div class="tabella-contenitore tabella-piena"><table class="tabella-dati tabella-scadenzario"><thead id="sic-testa"></thead><tbody id="sic-corpo"></tbody></table>
+                    <p class="tabella-vuota" id="sic-vuoto" hidden></p></div>
+            </section>
+        </main>
+    </div>
+
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

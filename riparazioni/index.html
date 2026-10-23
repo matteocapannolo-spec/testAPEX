@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riparazioni Industrial | APEX</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self' 'sha256-kc5CmThUhpgcZ8aFURmQysID/JfaJEAVT+PV3OzmETQ=' https://cdn.jsdelivr.net; style-src 'self' https://fonts.cdnfonts.com https://fonts.googleapis.com; font-src https://fonts.cdnfonts.com https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'self'; form-action 'self'">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%235C86FF'/><stop offset='1' stop-color='%23A9D4FF'/></linearGradient></defs><rect width='100' height='100' rx='18' fill='url(%23g)'/><g fill='%23ffffff' transform='translate(20 20) scale(2.5)'><ellipse cx='12' cy='5.4' rx='1.9' ry='4.3'/> <ellipse cx='12' cy='5.4' rx='1.9' ry='4.3' transform='rotate(45 12 12)'/> <ellipse cx='12' cy='5.4' rx='1.9' ry='4.3' transform='rotate(90 12 12)'/> <ellipse cx='12' cy='5.4' rx='1.9' ry='4.3' transform='rotate(135 12 12)'/> <ellipse cx='12' cy='5.4' rx='1.9' ry='4.3' transform='rotate(180 12 12)'/> <ellipse cx='12' cy='5.4' rx='1.9' ry='4.3' transform='rotate(225 12 12)'/> <ellipse cx='12' cy='5.4' rx='1.9' ry='4.3' transform='rotate(270 12 12)'/> <ellipse cx='12' cy='5.4' rx='1.9' ry='4.3' transform='rotate(315 12 12)'/> <circle cx='12' cy='12' r='2.6'/></g></svg>">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,add_box,autorenew,build,calendar_month,call,campaign,cancel,check,class,code,confirmation_number,contacts,content_copy,dark_mode,delete,edit,email,engineering,error,event,event_busy,expand_less,expand_more,folder_off,folder_open,function,groups,history,http,input,key,keyboard_double_arrow_left,keyboard_double_arrow_right,light_mode,link_off,location_on,logout,mail,note,notifications,open_in_new,person,person_add,precision_manufacturing,push_pin,radio,remove_circle,report,restart_alt,schedule,search,send,sticky_note_2,style,update,verified,water_drop&display=block">
+
+    <link rel="stylesheet" href="../core/core.css">
+    <link rel="stylesheet" href="riparazioni.css">
+    <link rel="stylesheet" href="pannelli.css">
+    <link rel="modulepreload" href="../core/auth.js">
+    <link rel="modulepreload" href="../core/notifiche.js">
+    <link rel="modulepreload" href="../core/permissions.js">
+    <link rel="modulepreload" href="../core/supabase.js">
+    <link rel="modulepreload" href="../core/table.js">
+    <link rel="modulepreload" href="../core/ui.js">
+    <link rel="modulepreload" href="api.js">
+    <link rel="modulepreload" href="avvisi.js">
+    <link rel="modulepreload" href="cartucce.js">
+    <link rel="modulepreload" href="clienti.js">
+    <link rel="modulepreload" href="config.js">
+    <link rel="modulepreload" href="contatti.js">
+    <link rel="modulepreload" href="contratto.js">
+    <link rel="modulepreload" href="flussi.js">
+    <link rel="modulepreload" href="flusso.js">
+    <link rel="modulepreload" href="luoghi.js">
+    <link rel="modulepreload" href="main.js">
+    <link rel="modulepreload" href="note.js">
+    <link rel="modulepreload" href="passo.js">
+    <link rel="modulepreload" href="persone.js">
+    <link rel="modulepreload" href="rinnovo.js">
+    <link rel="modulepreload" href="scheda.js">
+    <link rel="modulepreload" href="stato.js">
+    <link rel="modulepreload" href="strumenti.js">
+    <link rel="modulepreload" href="tabella.js">
+    <link rel="modulepreload" href="ticket.js">
+</head>
+<body>
+    <script>(function(){try{if(localStorage.getItem('apex-tema')==='scuro')document.body.classList.add('dark-mode')}catch(e){}})();</script>
+
+    <header class="header">
+        <div class="header-toprow">
+            <div class="brand-container">
+                <a class="brand-name" href="../" title="Torna al portale">APEX</a>
+            </div>
+            <div class="header-nav">
+                <div class="user-profile-wrapper">
+                    <div class="avatar-btn" id="utenteAvatar" data-action="profilo" title="Profilo utente">
+                        <span id="utenteIniziali">--</span>
+                    </div>
+                    <div class="profile-dropdown" id="menuProfilo" hidden>
+                        <div class="profile-user-card">
+                            <div class="avatar-btn avatar-large" id="utenteAvatarGrande"><span id="utenteInizialiGrandi">--</span></div>
+                            <div class="profile-user-details">
+                                <div class="profile-name" id="utenteNome"></div>
+                                <div class="profile-email" id="utenteEmail"></div>
+                            </div>
+                        </div>
+                        <div class="profile-menu-item" data-action="tema">
+                            <span class="material-symbols-outlined" id="iconaTema">dark_mode</span>
+                            <span id="testoTema">Modalità Scura</span>
+                        </div>
+                        <div class="profile-menu-item danger" data-action="logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Disconnetti Account</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-body">
+
+        <div class="header-actions-row">
+            <div class="header-actions">
+                <button type="button" class="btn btn-export" data-action="nuovo-contratto" id="btnNuovo" hidden>
+                    <span class="material-symbols-outlined">add_box</span> Nuovo Contratto
+                </button>
+                <button type="button" class="btn btn-theme" data-action="clienti" title="L'elenco dei clienti">
+                    <span class="material-symbols-outlined">groups</span> Clienti
+                </button>
+                <button type="button" class="btn btn-primario btn-ticket" data-action="ticket" title="Bug e richieste per questo modulo">
+                    <span class="material-symbols-outlined">confirmation_number</span> Tickets
+                    <span class="header-ticket-badge zero" id="contaTicket">0</span>
+                </button>
+                <button type="button" class="btn btn-theme btn-avvisi" data-action="da-contattare" id="btnAvvisi" title="Le scadenze per cui va sentito il cliente">
+                    <span class="material-symbols-outlined">campaign</span> Da contattare <span class="conta-avvisi" id="contaAvvisi">0</span>
+                </button>
+            </div>
+            <div class="stats-container">
+                <div class="stat-chip"><span class="stat-chip-label">Contratti</span><span class="stat-chip-value" id="statContratti">0</span></div>
+                <div class="stat-chip"><span class="stat-chip-label">Flussi aperti</span><span class="stat-chip-value" id="statFlussi">0</span></div>
+                <div class="stat-chip" title="Contratti scaduti: va deciso se sono stati rinnovati"><span class="stat-chip-label">Scaduti</span><span class="stat-chip-value" id="statRossi">0</span></div>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="ricerca">Ricerca Libera</label>
+                <input type="search" id="ricerca" class="standard-select campo-ricerca"
+                       placeholder="Cliente, contratto, numero di serie, DDT…" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="filter-group">
+                <label for="filtroResponsabile">Responsabile</label>
+                <select id="filtroResponsabile" class="standard-select"><option value="">Tutti</option></select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroScadenza">Scadenza</label>
+                <select id="filtroScadenza" class="standard-select"></select>
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <label class="spunta-filtro" title="Solo i contratti con un flusso in corso, già aperti, con il passaggio a cui ciascuno è fermo">
+                    <input type="checkbox" id="soloAperti"> Solo flussi aperti
+                </label>
+            </div>
+            <div class="filter-group filter-group-fine">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-theme" data-action="azzera-filtri" title="Resetta tutti i filtri">
+                    <span class="material-symbols-outlined">restart_alt</span> Resetta Filtri
+                </button>
+            </div>
+        </div>
+
+        <div class="riparazioni-avviso" id="avviso" hidden></div>
+
+        <main>
+            <div class="tabella-contenitore">
+                <table class="tabella-dati tabella-riparazioni">
+                    <thead id="intestazione"></thead>
+                    <tbody id="corpo"></tbody>
+                </table>
+                <p class="tabella-vuota" id="vuoto" hidden></p>
+            </div>
+        </main>
+    </div>
+
+    <dialog class="apex-dialog" id="dialogoPasso">
+        <h3 id="passoTitolo"></h3>
+        <p id="passoSottotitolo"></p>
+        <p class="nota-pannello" id="passoStorico" hidden></p>
+        <div class="dlg-errore" id="passoErrore" hidden></div>
+        <p class="avviso-fuori" id="passoFuoriContratto" hidden></p>
+        <div class="riquadro-portale" id="campoPortale" hidden>
+            <span>La richiesta di refill si fa sul portale di bNovate. Poi scrivi qui sotto il numero della richiesta (RR).</span>
+            <a id="passoPortale" class="btn btn-theme btn-piccolo" target="_blank" rel="noopener noreferrer"><span class="material-symbols-outlined">open_in_new</span> Apri il portale bNovate</a>
+        </div>
+        <div id="campoNumero">
+            <label class="campo-label" for="passoNumero" id="etichettaNumero">Numero</label>
+            <input type="text" id="passoNumero" class="edit-input campo-passo" maxlength="60" autocomplete="off">
+        </div>
+        <div id="campoData">
+            <label class="campo-label" for="passoData">Data</label>
+            <input type="date" id="passoData" class="edit-input campo-passo">
+        </div>
+        <div id="campoLink">
+            <label class="campo-label" for="passoLink">Link al documento su Google Drive</label>
+            <input type="url" id="passoLink" class="edit-input campo-passo" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+            <a id="passoApri" class="link-documento" target="_blank" rel="noopener noreferrer" hidden>
+                <span class="material-symbols-outlined">open_in_new</span> Apri il documento
+            </a>
+        </div>
+        <div id="campoEsito" role="radiogroup" aria-labelledby="etichettaEsito">
+            <div class="campo-label" id="etichettaEsito">Da fatturare?</div>
+            <label class="scelta-esito"><input type="radio" name="esito" value="si" class="campo-passo"> Sì</label>
+            <label class="scelta-esito"><input type="radio" name="esito" value="no" class="campo-passo"> No, il flusso si chiude</label>
+        </div>
+        <div id="campoSeriale">
+            <label class="campo-label" for="passoSeriale">Seriale del refill (per esempio BNO-ICC-01348)</label>
+            <input type="text" id="passoSeriale" class="edit-input campo-passo" maxlength="60" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="luoghi-passo" id="campoLuoghi">
+            <div id="campoDa">
+                <label class="campo-label" for="passoDa">Parte da</label>
+                <select id="passoDa" class="standard-select scelta-luogo campo-passo"></select>
+                <input type="text" class="edit-input campo-sotto campo-passo" placeholder="Nome del luogo nuovo" maxlength="120" aria-label="Nome del luogo nuovo" hidden>
+            </div>
+            <div id="campoA">
+                <label class="campo-label" for="passoA">Arriva a</label>
+                <select id="passoA" class="standard-select scelta-luogo campo-passo"></select>
+                <input type="text" class="edit-input campo-sotto campo-passo" placeholder="Nome del luogo nuovo" maxlength="120" aria-label="Nome del luogo nuovo" hidden>
+            </div>
+            <div id="campoUbicazione">
+                <label class="campo-label" for="passoUbicazione">Dove resta il pezzo</label>
+                <select id="passoUbicazione" class="standard-select scelta-luogo campo-passo"></select>
+                <input type="text" class="edit-input campo-sotto campo-passo" placeholder="Nome del luogo nuovo" maxlength="120" aria-label="Nome del luogo nuovo" hidden>
+            </div>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-passo" id="passoChiudi">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-passo" id="passoSalva">Completa</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoContratto">
+        <h3 id="contrattoTitolo">Nuovo contratto</h3>
+        <div class="dlg-errore" id="contrattoErrore" hidden></div>
+        <p class="nota-pannello" id="contrattoNotaRinnovo" hidden>Strumenti e contatti passano da soli al contratto nuovo. Quello vecchio esce dalla tabella e resta fra i «Rinnovati o chiusi».</p>
+        <div class="campi-affiancati">
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoCliente">Cliente</label>
+                <select id="contrattoCliente" class="standard-select"></select>
+                <input type="text" id="contrattoNuovoCliente" class="edit-input campo-sotto" placeholder="Nome del nuovo cliente" maxlength="200" hidden>
+            </div>
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoPratica">Pratica</label>
+                <select id="contrattoPratica" class="standard-select"></select>
+                <input type="text" id="contrattoNuovaPratica" class="edit-input campo-sotto" placeholder="Nome della nuova pratica" maxlength="200" hidden>
+            </div>
+        </div>
+        <label class="campo-label" for="contrattoPraticaLink">Cartella della pratica su Google Drive (vale per tutti i suoi contratti)</label>
+        <input type="url" id="contrattoPraticaLink" class="edit-input" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+        <div class="campi-affiancati">
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoNome">Contratto</label>
+                <input type="text" id="contrattoNome" class="edit-input" maxlength="200" autocomplete="off">
+            </div>
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoResponsabile">Responsabile commerciale</label>
+                <select id="contrattoResponsabile" class="standard-select"></select>
+            </div>
+        </div>
+        <label class="campo-label" for="contrattoCodici">Codici del contratto (uno o più, come li scrive il cliente: CIG, ODA, numero…)</label>
+        <input type="text" id="contrattoCodici" class="edit-input" maxlength="300" autocomplete="off" spellcheck="false">
+        <label class="campo-label" for="contrattoLink">Cartella del contratto su Google Drive</label>
+        <input type="url" id="contrattoLink" class="edit-input" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+        <div class="campi-affiancati">
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoSottoscrizione">Sottoscrizione</label>
+                <input type="date" id="contrattoSottoscrizione" class="edit-input">
+            </div>
+            <div class="campo-affiancato">
+                <label class="campo-label" for="contrattoConclusione">Conclusione</label>
+                <input type="date" id="contrattoConclusione" class="edit-input">
+            </div>
+        </div>
+        <label class="spunta-pannello"><input type="checkbox" id="contrattoRinnovo"> Rinnovo automatico alla scadenza</label>
+        <label class="campo-label" for="contrattoSintesi">Sintesi del contratto</label>
+        <textarea id="contrattoSintesi" class="form-textarea" rows="3" maxlength="2000"></textarea>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-contratto">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-contratto">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoStrumenti">
+        <h3>Strumenti del contratto</h3>
+        <p id="strumentiSottotitolo"></p>
+        <div class="dlg-errore" id="strumentiErrore" hidden></div>
+        <div class="elenco-strumenti" id="elencoStrumenti"></div>
+        <div id="aggiungiStrumento">
+            <div class="campo-label">Aggiungi uno strumento</div>
+            <div class="riga-aggiunta">
+                <select id="strumentoModello" class="standard-select"></select>
+                <input type="text" id="strumentoSerie" class="edit-input" placeholder="Numero di serie" maxlength="80" autocomplete="off" spellcheck="false">
+                <button type="button" class="btn btn-export" data-action="aggiungi-strumento"><span class="material-symbols-outlined">add</span> Aggiungi</button>
+            </div>
+            <p class="nota-pannello" id="modelliVuoti" hidden>Asset non ha ancora modelli Industrial: lo strumento si registra dopo averne aggiunto il modello là.</p>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-strumenti">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-scheda" id="dialogoScheda">
+        <div class="scheda-testa">
+            <div id="schedaFoto"></div>
+            <div class="scheda-nome">
+                <h3 id="schedaSerie"></h3>
+                <p id="schedaModello"></p>
+            </div>
+        </div>
+        <div class="avviso-promemoria in-cima" id="schedaAvviso" hidden></div>
+        <div class="dlg-errore" id="schedaErrore" hidden></div>
+
+        <div class="scheda-sezioni">
+            <section class="scheda-sezione">
+                <h4><span class="material-symbols-outlined">location_on</span> Dove si trova</h4>
+                <label class="campo-label" for="schedaSito">Sito</label>
+                <input type="text" id="schedaSito" class="edit-input" maxlength="200" placeholder="Indirizzo o nome dell'impianto" autocomplete="off">
+                <label class="campo-label" for="schedaPunto">Punto di installazione</label>
+                <input type="text" id="schedaPunto" class="edit-input" maxlength="200" placeholder="Dove sta dentro il sito" autocomplete="off">
+            </section>
+            <section class="scheda-sezione">
+                <h4><span class="material-symbols-outlined">calendar_month</span> Date</h4>
+                <div class="campi-affiancati">
+                    <div><label class="campo-label" for="schedaAcquisto">Acquisto</label><input type="date" id="schedaAcquisto" class="edit-input"></div>
+                    <div><label class="campo-label" for="schedaInstallazione">Installazione</label><input type="date" id="schedaInstallazione" class="edit-input"></div>
+                    <div><label class="campo-label" for="schedaProduzione">Produzione</label><input type="date" id="schedaProduzione" class="edit-input"></div>
+                    <div><label class="campo-label" for="schedaGaranzia">In garanzia fino al</label><input type="date" id="schedaGaranzia" class="edit-input"></div>
+                </div>
+            </section>
+            <section class="scheda-sezione" id="sezioneManutenzione">
+                <h4><span class="material-symbols-outlined">build</span> Manutenzione</h4>
+                <div class="campi-affiancati">
+                    <div><label class="campo-label" for="schedaUltimo">Ultimo intervento</label><input type="date" id="schedaUltimo" class="edit-input"></div>
+                    <div><label class="campo-label" for="schedaIntervallo">Ogni quanti mesi</label><input type="number" id="schedaIntervallo" class="edit-input" min="1" max="120" step="1"></div>
+                </div>
+                <label class="campo-label" for="schedaRat">RAT dell'ultimo intervento (link)</label>
+                <input type="url" id="schedaRat" class="edit-input" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+                <a id="schedaApriRat" class="link-documento" target="_blank" rel="noopener noreferrer" hidden><span class="material-symbols-outlined">open_in_new</span> Apri il RAT</a>
+                <div class="scheda-prossimo" id="schedaProssimo"></div>
+            </section>
+            <section class="scheda-sezione" id="sezioneBactoCare">
+                <h4><span class="material-symbols-outlined">verified</span> BactoCare</h4>
+                <label class="campo-label" for="schedaBcTipo">Piano</label>
+                <input type="text" id="schedaBcTipo" class="edit-input" maxlength="60" placeholder="Essential" autocomplete="off">
+                <div class="campi-affiancati">
+                    <div><label class="campo-label" for="schedaBcFatte">Manutenzioni fatte</label><input type="number" id="schedaBcFatte" class="edit-input" min="0" max="50" step="1"></div>
+                    <div><label class="campo-label" for="schedaBcComprese">su quante comprese</label><input type="number" id="schedaBcComprese" class="edit-input" min="0" max="50" step="1"></div>
+                </div>
+                <label class="campo-label" for="schedaBcScadenza">Scadenza della manutenzione</label>
+                <input type="date" id="schedaBcScadenza" class="edit-input">
+            </section>
+        </div>
+        <div class="scheda-salva">
+            <button type="button" class="btn btn-primario" data-action="salva-scheda" id="schedaSalva">Salva la scheda</button>
+        </div>
+
+        <section class="scheda-blocco">
+            <h4><span class="material-symbols-outlined">sticky_note_2</span> Note e promemoria</h4>
+            <div id="schedaNote"></div>
+        </section>
+        <section class="scheda-blocco">
+            <h4><span class="material-symbols-outlined">history</span> Storia</h4>
+            <div class="campo-label">Contratti</div>
+            <ul class="elenco-storia" id="storiaContratti"></ul>
+            <div class="campo-label">Flussi</div>
+            <ul class="elenco-storia" id="storiaFlussi"></ul>
+        </section>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-scheda">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoContatti">
+        <h3>Contatti</h3>
+        <p id="contattiSottotitolo"></p>
+        <div class="dlg-errore" id="contattiErrore" hidden></div>
+        <div class="elenco-contatti" id="elencoContatti"></div>
+        <div class="form-contatto" id="formContatto" hidden>
+            <div class="campo-label titolo-form" id="formContattoTitolo">Nuovo contatto</div>
+            <div class="campi-affiancati">
+                <div><label class="campo-label" for="contattoNome">Nome</label><input type="text" id="contattoNome" class="edit-input" maxlength="100" autocomplete="off"></div>
+                <div><label class="campo-label" for="contattoCognome">Cognome</label><input type="text" id="contattoCognome" class="edit-input" maxlength="100" autocomplete="off"></div>
+                <div><label class="campo-label" for="contattoSocieta">Società</label><input type="text" id="contattoSocieta" class="edit-input" maxlength="200" autocomplete="off"></div>
+                <div><label class="campo-label" for="contattoRuolo">Ruolo o dipartimento</label><input type="text" id="contattoRuolo" class="edit-input" maxlength="200" autocomplete="off"></div>
+                <div><label class="campo-label" for="contattoEmail">Email</label><input type="email" id="contattoEmail" class="edit-input" maxlength="200" autocomplete="off" spellcheck="false"></div>
+                <div><label class="campo-label" for="contattoCellulare">Cellulare</label><input type="tel" id="contattoCellulare" class="edit-input" maxlength="40" autocomplete="off"></div>
+            </div>
+            <div class="form-contatto-azioni">
+                <button type="button" class="btn btn-theme" data-action="annulla-contatto">Annulla</button>
+                <button type="button" class="btn btn-primario" data-action="salva-contatto">Salva il contatto</button>
+            </div>
+        </div>
+        <p class="nota-pannello" id="contattiPieno" hidden>Il contratto ha già tre contatti: per aggiungerne uno, prima se ne toglie un altro.</p>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-export" data-action="nuovo-contatto" id="btnNuovoContatto"><span class="material-symbols-outlined">person_add</span> Aggiungi contatto</button>
+            <button type="button" class="btn btn-theme" data-action="chiudi-contatti">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoCartucce">
+        <h3>Cartucce</h3>
+        <p id="cartucceSottotitolo"></p>
+        <div class="dlg-errore" id="cartucceErrore" hidden></div>
+        <div class="elenco-cartucce" id="elencoCartucce"></div>
+        <div class="form-contatto" id="formCartuccia" hidden>
+            <div class="campo-label titolo-form" id="formCartucciaTitolo">Nuova cartuccia</div>
+            <div class="campi-affiancati">
+                <div><label class="campo-label" for="cartucciaSeriale">Seriale</label><input type="text" id="cartucciaSeriale" class="edit-input" maxlength="60" placeholder="BAC-930448" autocomplete="off" spellcheck="false"></div>
+                <div><label class="campo-label" for="cartucciaUbicazione">Dove si trova (se si sa)</label><input type="text" id="cartucciaUbicazione" class="edit-input" maxlength="200" autocomplete="off"></div>
+                <div><label class="campo-label" for="cartucciaRefill">Refill attuale</label><input type="text" id="cartucciaRefill" class="edit-input" maxlength="60" placeholder="BNO-ICC-01116" autocomplete="off" spellcheck="false"></div>
+                <div><label class="campo-label" for="cartucciaRefillData">Data del refill</label><input type="date" id="cartucciaRefillData" class="edit-input"></div>
+                <div><label class="campo-label" for="cartucciaRefillScadenza">Il refill scade il (vuoto: 9 mesi dopo)</label><input type="date" id="cartucciaRefillScadenza" class="edit-input"></div>
+                <div><label class="campo-label" for="cartucciaConsegna">Ultima consegna al cliente</label><input type="date" id="cartucciaConsegna" class="edit-input"></div>
+            </div>
+            <label class="campo-label" for="cartucciaNote">Note</label>
+            <textarea id="cartucciaNote" class="form-textarea" rows="2" maxlength="2000"></textarea>
+            <div class="form-contatto-azioni">
+                <button type="button" class="btn btn-theme" data-action="annulla-cartuccia">Annulla</button>
+                <button type="button" class="btn btn-primario" data-action="salva-cartuccia">Salva la cartuccia</button>
+            </div>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-export" data-action="nuova-cartuccia" id="btnNuovaCartuccia"><span class="material-symbols-outlined">add</span> Aggiungi cartuccia</button>
+            <button type="button" class="btn btn-theme" data-action="chiudi-cartucce">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoNote">
+        <h3>Note del flusso</h3>
+        <p id="noteSottotitolo"></p>
+        <div id="noteFlusso"></div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-note">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoFlusso">
+        <h3 id="flussoTitoloPannello">Nuovo flusso</h3>
+        <p id="flussoSottotitolo"></p>
+        <div class="dlg-errore" id="flussoErrore" hidden></div>
+        <div class="campo-label">Tipo</div>
+        <div class="scelta-tipo" id="flussoTipi" role="radiogroup" aria-label="Tipo di flusso"></div>
+        <p class="nota-pannello" id="flussoTipoNota" hidden></p>
+        <label class="campo-label" for="flussoTitolo">Titolo</label>
+        <input type="text" id="flussoTitolo" class="edit-input" maxlength="200" autocomplete="off">
+        <label class="campo-label" for="flussoCartella">Sottocartella del flusso su Google Drive (buoni, DDT, mail del cliente)</label>
+        <input type="url" id="flussoCartella" class="edit-input" placeholder="https://drive.google.com/…" autocomplete="off" spellcheck="false">
+        <div id="campoStrumenti">
+            <div class="campo-label">Strumenti (un brand solo: è il fornitore)</div>
+            <div class="scelte-strumenti" id="flussoStrumenti"></div>
+            <p class="nota-pannello" id="flussoBloccati" hidden>Il primo passaggio sul pezzo è già fatto: gli strumenti di questo flusso non si cambiano più.</p>
+            <div class="avviso-promemoria" id="flussoPromemoria" hidden></div>
+        </div>
+        <div id="campoCartuccia" hidden>
+            <label class="campo-label" for="flussoCartuccia">Cartuccia (un refill per cartuccia: ognuna ha la sua richiesta RR)</label>
+            <select id="flussoCartuccia" class="standard-select"></select>
+            <p class="nota-pannello" id="flussoSenzaCartucce" hidden>Il contratto non ha ancora cartucce: si aggiungono dalla colonna «Cartucce».</p>
+        </div>
+        <label class="campo-label" for="flussoTecnico">Tecnico (facoltativo)</label>
+        <select id="flussoTecnico" class="standard-select"></select>
+        <div class="campo-fuori" id="campoFuori" hidden>
+            <label class="spunta-pannello"><input type="checkbox" id="flussoFuori"> Fuori contratto: il cliente lo gestisce a parte (l'amministrazione riceve un avviso)</label>
+            <textarea id="flussoFuoriNota" class="form-textarea" rows="2" maxlength="1000" placeholder="Cosa ha chiesto il cliente, e quando (per esempio: «13/10, mail del cliente: serve un verbale prima della fattura»)" hidden></textarea>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-flusso">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-flusso">Salva</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoRinnovo">
+        <h3 id="rinnovoTitolo"></h3>
+        <p id="rinnovoTesto"></p>
+        <p class="nota-pannello" id="rinnovoAutomatico" hidden>Ha il rinnovo automatico.</p>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-rinnovo">Decido dopo</button>
+            <button type="button" class="btn btn-theme" data-action="no-rinnovo" id="btnChiudiContratto">No, chiudilo</button>
+            <button type="button" class="btn btn-primario" data-action="si-rinnovo">Sì, registra il rinnovo</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoAvvisi">
+        <h3>Da contattare</h3>
+        <p>Contratti che scadono entro 6 mesi o sono scaduti, manutenzioni previste entro due mesi, refill che scadono entro un mese. Ognuno resta qui finché non premi «Cliente contattato».</p>
+        <div class="dlg-errore" id="avvisiErrore" hidden></div>
+        <div class="elenco-avvisi" id="elencoAvvisi"></div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-avvisi">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoClienti">
+        <h3>Clienti</h3>
+        <p>Il nome si salva uscendo dal campo.</p>
+        <div class="dlg-errore" id="clientiErrore" hidden></div>
+        <div class="elenco-clienti" id="elencoClienti"></div>
+        <div class="riga-aggiunta" id="rigaNuovoCliente">
+            <input type="text" id="nuovoCliente" class="edit-input" placeholder="Nuovo cliente" maxlength="200" autocomplete="off">
+            <button type="button" class="btn btn-export" data-action="aggiungi-cliente"><span class="material-symbols-outlined">add</span> Aggiungi</button>
+        </div>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-primario" data-action="chiudi-clienti">Chiudi</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog dialogo-largo" id="dialogoTicket">
+        <h3 class="titolo-ticket"><span class="material-symbols-outlined">confirmation_number</span> Tickets di Riparazioni</h3>
+        <p>Bug e richieste per questo modulo. Ognuno diventa una scheda su Task; si chiude portandola in Done.</p>
+        <div class="dlg-errore" id="ticketErrore" hidden></div>
+        <div class="elenco-ticket" id="elencoTicket"></div>
+        <div class="apex-dialog-actions azioni-ticket">
+            <button type="button" class="btn btn-theme" data-action="chiudi-ticket">Chiudi</button>
+            <button type="button" class="btn btn-export" data-action="nuovo-ticket"><span class="material-symbols-outlined">add</span> Nuovo Ticket</button>
+        </div>
+    </dialog>
+
+    <dialog class="apex-dialog" id="dialogoNuovoTicket">
+        <h3>Crea Nuovo Ticket</h3>
+        <div class="dlg-errore" id="nuovoTicketErrore" hidden></div>
+        <label class="campo-label" for="ticketCategoria">Categoria</label>
+        <select id="ticketCategoria" class="standard-select">
+            <option value="bug">🐛 Bug dell'applicazione</option>
+            <option value="feature">➕ Richiesta Feature / Suggerimento</option>
+        </select>
+        <label class="campo-label" for="ticketTitolo">Titolo</label>
+        <input type="text" id="ticketTitolo" class="edit-input" maxlength="200" autocomplete="off" placeholder="Es. Il DDT non si salva / Vorrei un filtro per tecnico">
+        <label class="campo-label" for="ticketAutore">Chi ha scritto il ticket</label>
+        <input type="text" id="ticketAutore" class="edit-input" readonly>
+        <label class="campo-label" for="ticketDescrizione">Descrizione</label>
+        <textarea id="ticketDescrizione" class="form-textarea" rows="5" maxlength="4000"></textarea>
+        <div class="apex-dialog-actions">
+            <button type="button" class="btn btn-theme" data-action="chiudi-nuovo-ticket">Annulla</button>
+            <button type="button" class="btn btn-primario" data-action="salva-ticket">Invia</button>
+        </div>
+    </dialog>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
